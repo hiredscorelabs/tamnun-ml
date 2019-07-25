@@ -19,7 +19,7 @@ $ python setup.py install
 Or install directly from Github:
 
 ```
-pip install git+ssh://git@github.com/hiredscorelabs/octoml
+pip install git+https://github.com/hiredscorelabs/octoml
 ```
 
 Jump in and try out an example:
