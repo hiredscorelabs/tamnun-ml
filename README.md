@@ -1,6 +1,6 @@
 ![](media/cover.png)
 
-# Octoml [INTERNAL]
+# Octoml
 
 `octoml` is a python framework for Machine and Deep learning algorithms and methods especially in the field of Natural Language Processing and Transfer Learning. The aim of `octoml` is to provide an easy to use interfaces to build powerful models based on most recent SOTA methods.
 
