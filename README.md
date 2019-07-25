@@ -2,7 +2,7 @@
 
 # Octoml [INTERNAL]
 
-`octoml` is a python framework for Machine and Deep learning algorithms and methods especially in the field of Natural Language Processing and Transfer Learning. The aim of `octoml` is to provide an easy to use interfaces to build powerful models based on most recent [SOTA](xxx) methods.
+`octoml` is a python framework for Machine and Deep learning algorithms and methods especially in the field of Natural Language Processing and Transfer Learning. The aim of `octoml` is to provide an easy to use interfaces to build powerful models based on most recent SOTA methods.
 
 For more about `octoml`, feel free to read [the introduction to octoml on Medium](XXX).
 
@@ -34,7 +34,7 @@ Or take a look at the Jupyer notebooks [here](notebooks).
 ## BERT
 
 *BERT* stands for Bidirectional Encoder Representations from Transformers which is a language model trained by Google and introduced in their [paper](https://arxiv.org/abs/1810.04805).
-Here we use the excellent [PyTorch-Pretrained-BERT](https://arxiv.org/abs/1810.04805) library and wrap it to provide an easy to use [scikit-learn](https://scikit-learn.org/) interface for easy BERT fine-tuning. At the moment, `octoml` BERT classifier supports binary and multi-class classification. To fine-tune BERT on a specific task:
+Here we use the excellent [PyTorch-Pretrained-BERT](https://pypi.org/project/pytorch-pretrained-bert/) library and wrap it to provide an easy to use [scikit-learn](https://scikit-learn.org/) interface for easy BERT fine-tuning. At the moment, `octoml` BERT classifier supports binary and multi-class classification. To fine-tune BERT on a specific task:
 
 ```python
 from octoml.bert import BertClassifier, BertVectorizer
