@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='octoml',
+    name='tamnun',
     packages=find_packages(exclude=['test*']),
     install_requires=[
         'numpy==1.15.4',
