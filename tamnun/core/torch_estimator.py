@@ -13,7 +13,17 @@ TASK_TYPE_TO_LOSS_FUNCTION = {
 }
 
 class TorchEstimator(object):
+    """
+    Torch module wrapper with the sklearn interface for training and predictions.
+
+    torch_module: a model of type torch.nn.Module
+    optimizer (optional): optimizer from toch.optim, if none, Adam with default params is used.
+    task_type (optional): one of 'classification' (default), 'regression', 'multitag'. Sets the shapes, the loss func and more.
+    input_dype (optional): the tensor type should be created for the input, default is float
+    verbose (optional): if True (default) print training progress (epochs and loss)
+    """
     def __init__(self, torch_module, optimizer=None, task_type='classification', input_dtype=torch.float, verbose=True):
+        self.output_dim = 1
         self.model = torch_module
         self.verbose = verbose
         self.input_dtype = input_dtype
@@ -24,11 +34,12 @@ class TorchEstimator(object):
 
     def fit(self, X, y, output_dim=None, batch_size=4, epochs=5):
         """
-        Fine-tunes BERT and trains the final linear layer
+        fits the model
 
-        X: A numpy array of vectorized text using BertVectorizer
-        y: A numpy array of the target variable.
-        epochs:  Number of epochs to fine-tune, default is 5
+        X: A numpy array or torch tensor for the input.
+        y: A numpy array or torch tensor for the target variable.
+        batch_size (optional): the batch size to use during training, default=4
+        epochs (optional):  Number of epochs to train, default is 5
         output_dim: The output dimensions of the final linear layer, will be computed automatically from the target variable if None
         return: self
         """
@@ -39,9 +50,6 @@ class TorchEstimator(object):
                 raise Exception('Target shape must be of dim 1 or 2')
             elif len(y.shape) > 1:
                 self.output_dim = y.shape[1]
-            else:
-                self.output_dim = 1
-
 
         inputs = torch.tensor(X, dtype=self.input_dtype)
         tags = torch.tensor(y, dtype=torch.float if self.task_type == 'regression' else torch.long)
@@ -73,12 +81,12 @@ class TorchEstimator(object):
 
             self.model.zero_grad()
 
-            logits = self.model(input)
+            output = self.model(input)
 
             if self.task_type != 'classification':
                 tags = tags.view(-1, self.output_dim)
 
-            batch_loss = self.loss_function(logits, tags)
+            batch_loss = self.loss_function(output, tags)
             epoch_loss += batch_loss.item()
 
             batch_loss.backward()
@@ -97,25 +105,25 @@ class TorchEstimator(object):
         """
         Uses the model to predict the target variable
 
-        X: A numpy array of vectorized text using BertVectorizer
-        return: A numpy array with predictions - class id for each instance
+        X: A numpy array or torch tensor for the input.
+        return: A numpy array with predictions
         """
-        logits = self.decision_function(X, batch_size=batch_size)
+        output = self.decision_function(X, batch_size=batch_size)
         if self.task_type == 'classification':
-            return np.argmax(logits, axis=1)
+            return np.argmax(output, axis=1)
         elif self.task_type == 'regression':
             if self.output_dim == 1:
-                logits = logits.reshape(-1,)
-            return logits
+                output = output.reshape(-1,)
+            return output
         elif self.task_type == 'multitag':
-            return logits > 0.5
+            return output > 0.5
 
     def decision_function(self, X, batch_size=4):
         """
          Uses the model to predict the target variable and returns the final layer output without activation
 
-        X: A numpy array of vectorized text using BertVectorizer
-        return: A numpy array with raw logtis. One vector for each instance
+        X: A numpy array or torch tensor for the input.
+        return: A numpy array with raw output of the final layer. One vector for each instance
         """
         if self.model is None:
             raise Exception("BertClassifier is not fitted yet")
@@ -127,14 +135,14 @@ class TorchEstimator(object):
         data = TensorDataset(inputs)
         loader = DataLoader(data, batch_size=batch_size)
 
-        all_logits = []
+        all_output = []
         for step_num, (input, ) in enumerate(loader):
             input = input.to(self.device)
 
             with torch.no_grad():
-                logits = self.model(input)
-            all_logits.append(logits.cpu().detach().numpy())
-        return np.vstack(all_logits)
+                output = self.model(input)
+            all_output.append(output.cpu().detach().numpy())
+        return np.vstack(all_output)
 
 
 def get_loss_function_for_task(task_type):

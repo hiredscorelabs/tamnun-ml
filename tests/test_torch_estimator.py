@@ -10,7 +10,7 @@ def test_classifier_default():
     X = np.array([list(range(10)),
                   list(range(10, 20))])
     y = np.array([0, 1])
-    predicted = clf.fit(X, y, epochs=200).predict(X)
+    predicted = clf.fit(X, y, epochs=1000).predict(X)
 
     assert (predicted == y).all()
 
