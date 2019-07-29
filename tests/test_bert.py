@@ -7,7 +7,7 @@ def test_multiclass_predictions_shapes():
                   [101, 429, 876]])
     y = np.array([1, 2, 1])
 
-    clf = BertClassifier().fit(X, y, epochs=1)
+    clf = BertClassifier(output_size=3).fit(X, y, epochs=1)
     predicted = clf.predict(X)
 
     assert predicted.shape == (3,)
@@ -19,7 +19,7 @@ def test_binary_predictions_shapes():
                   [101, 429, 876]])
     y = np.array([1, 0, 1])
 
-    clf = BertClassifier().fit(X, y, epochs=1)
+    clf = BertClassifier(output_size=2).fit(X, y, epochs=1)
     predicted = clf.predict(X)
 
     assert predicted.shape == (3,)

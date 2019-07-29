@@ -1,4 +1,4 @@
-from pytorch_pretrained_bert import BertModel
+from pytorch_transformers import BertModel
 from torch import nn
 
 
@@ -18,7 +18,7 @@ class BertForClassification(nn.Module):
         self.linear = nn.Linear(hidden_size, output_size)
 
     def forward(self, input_ids, attention_mask=None):
-        _, bert_pooled = self.bert(input_ids, attention_mask=attention_mask, output_all_encoded_layers=False)
+        _, bert_pooled = self.bert(input_ids, attention_mask=attention_mask)
         dropout_output = self.dropout(bert_pooled)
         liner_output = self.linear(dropout_output)
         return liner_output
