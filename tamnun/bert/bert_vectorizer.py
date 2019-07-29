@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.base import TransformerMixin
 from pytorch_pretrained_bert import BertTokenizer
-from octoml.bert.constants import BERT_BASE_UNCASED_MODEL_NAME
+from tamnun.bert.constants import BERT_BASE_UNCASED_MODEL_NAME
 
 
 CLS_TOKEN = '[CLS]'

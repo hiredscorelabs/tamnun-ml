@@ -1,6 +1,6 @@
 import numpy as np
 from torchnlp.datasets import imdb_dataset # run pip install pytorch-nlp if you dont have this
-from octoml.bert import BertClassifier, BertVectorizer
+from tamnun.bert import BertClassifier, BertVectorizer
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import classification_report
 

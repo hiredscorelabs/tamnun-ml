@@ -1,5 +1,5 @@
 import numpy as np
-from octoml.bert import BertClassifier, BertVectorizer
+from tamnun.bert import BertClassifier, BertVectorizer
 
 def test_multiclass_predictions_shapes():
     X = np.array([[101, 429, 876],
