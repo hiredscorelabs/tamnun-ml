@@ -18,7 +18,7 @@ class BertForClassification(nn.Module):
         self.linear = nn.Linear(hidden_size, output_size)
 
     def forward(self, input_ids, attention_mask=None):
-        _, bert_pooled = self.bert(input_ids, attention_mask=attention_mask)
+        _, bert_pooled = self.bert(input_ids, attention_mask=input_ids > 0)
         dropout_output = self.dropout(bert_pooled)
         liner_output = self.linear(dropout_output)
         return liner_output
