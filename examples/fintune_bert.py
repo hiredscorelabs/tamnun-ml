@@ -21,7 +21,7 @@ print('Test size:', len(test_texts))
 # Create a pipeline with the vectorizer and the classifier and then fit it on the raw data
 print('Fine-tuning BERT...')
 clf = make_pipeline(BertVectorizer(do_truncate=True),
-                    BertClassifier(lr=1e-5)).fit(train_texts, train_y)
+                    BertClassifier(num_of_classes=2, lr=1e-5)).fit(train_texts, train_y)
 
 predicted = clf.predict(test_texts)
 
