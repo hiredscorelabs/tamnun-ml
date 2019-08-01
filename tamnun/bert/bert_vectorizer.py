@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.base import TransformerMixin
-from pytorch_pretrained_bert import BertTokenizer
+from pytorch_transformers import BertTokenizer
 from tamnun.bert.constants import BERT_BASE_UNCASED_MODEL_NAME
 
 
