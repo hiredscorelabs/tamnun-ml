@@ -56,7 +56,7 @@ module = nn.Linear(128, 2)
 clf = TorchEstimator(module, task_type='classification').fit(train_X, train_y)
 ```
 
-See [this file](xxx) for a full example of fitting `nn.Linear` module on the [MNIST](http://yann.lecun.com/exdb/mnist/) (classification of handwritten digits) dataset. 
+See [this file](https://github.com/hiredscorelabs/tamnun-ml/blob/master/examples/linear_mnist.py) for a full example of fitting `nn.Linear` module on the [MNIST](http://yann.lecun.com/exdb/mnist/) (classification of handwritten digits) dataset. 
 
 ## Distiller Transfer Learning
 
