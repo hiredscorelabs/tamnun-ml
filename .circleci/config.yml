@@ -7,10 +7,6 @@ workflows:
             tags:
               only: /.*/
       - test-python-install:
-          version: "3.6"
-          requires:
-            - build
-      - test-python-install:
           version: "3.7"
           requires:
             - build
@@ -25,7 +21,7 @@ workflows:
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
     steps:
       - checkout
       - restore_cache:
@@ -45,12 +41,9 @@ jobs:
           command: |
             . venv/bin/activate
             make test
-            codecov
-      - store_artifacts:
-          path: htmlcov/
   deploy:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
     steps:
       - checkout
       - restore_cache:
@@ -75,14 +68,14 @@ jobs:
           name: init .pypirc
           command: |
             echo -e "[pypi]" >> ~/.pypirc
-            echo -e "username = USERNAME" >> ~/.pypirc
+            echo -e "username = $PYPI_USERNAME" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
           name: create packages
           command: |
             make package
-      - run:
-          name: upload to pypi
-          command: |
-            . venv/bin/activate
-            twine upload dist/*
+#      - run:
+#          name: upload to pypi
+#          command: |
+#            . venv/bin/activate
+#            twine upload dist/*
