@@ -6,10 +6,6 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - test-python-install:
-          version: "3.7"
-          requires:
-            - build
       - deploy:
           requires:
             - build
