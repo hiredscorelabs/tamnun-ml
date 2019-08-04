@@ -70,8 +70,8 @@ jobs:
           name: create packages
           command: |
             make package
-#      - run:
-#          name: upload to pypi
-#          command: |
-#            . venv/bin/activate
-#            twine upload dist/*
+      - run:
+          name: upload to pypi
+          command: |
+            . venv/bin/activate
+            twine upload dist/*
