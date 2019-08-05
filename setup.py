@@ -3,7 +3,7 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 
 class VerifyVersionCommand(install):
     """Custom command to verify that the git tag matches our version"""
@@ -25,6 +25,7 @@ setup(
     description="An easy to use open-source library for advanced Deep Learning and Natural Language Processing",
     long_description=open("README.md", "r", encoding='utf-8').read(),
     long_description_content_type="text/markdown",
+    url="https://github.com/hiredscorelabs/tamnun-ml",
     keywords='Deep Learning Natural Language Processing NLP Machine Learning Transfer Learning',
     license='Apache',
     packages=find_packages(exclude=['test*']),
