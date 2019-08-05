@@ -19,10 +19,10 @@ $ cd tamnun-ml
 $ python setup.py install
 ```
 
-Or install directly from Github:
+Or using PyPI:
 
 ```
-pip install git+https://github.com/hiredscorelabs/tamnun-ml
+pip install tamnun
 ```
 
 Jump in and try out an example:
