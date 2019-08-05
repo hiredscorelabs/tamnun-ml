@@ -2,6 +2,9 @@
 
 # Tamnun ML
 
+[![PyPI pyversions](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue)](https://img.shields.io/badge/python-3.6%20%7C%203.7-blue)
+[![CircleCI](https://circleci.com/gh/hiredscorelabs/tamnun-ml.svg?style=svg)](https://circleci.com/gh/hiredscorelabs/tamnun-ml)
+
 `tamnun` is a python framework for Machine and Deep learning algorithms and methods especially in the field of Natural Language Processing and Transfer Learning. The aim of `tamnun` is to provide an easy to use interfaces to build powerful models based on most recent SOTA methods.
 
 For more about `tamnun`, feel free to read [the introduction to TamnunML on Medium](https://medium.com/hiredscore-engineering/introducing-octoml-73bd527491b1).
