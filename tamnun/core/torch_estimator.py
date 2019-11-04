@@ -32,7 +32,7 @@ class TorchEstimator(object):
         self.task_type = task_type
         self.optimizer = optimizer or Adam(self.model.parameters())
 
-    def fit(self, X, y, output_dim=None, batch_size=4, epochs=5):
+    def fit(self, X, y, val_X=None, val_y=None, output_dim=None, batch_size=4, epochs=5):
         """
         fits the model
 
@@ -52,7 +52,7 @@ class TorchEstimator(object):
                 self.output_dim = y.shape[1]
 
         inputs = torch.tensor(X, dtype=self.input_dtype)
-        tags = torch.tensor(y, dtype=torch.float if self.task_type == 'regression' else torch.long)
+        tags = torch.tensor(y, dtype=torch.long if self.task_type == 'classification' else torch.float)
 
         data = TensorDataset(inputs, tags)
         sampler = RandomSampler(data)
@@ -60,18 +60,60 @@ class TorchEstimator(object):
 
         if torch.cuda.is_available(): self.model.cuda()
 
-        self.train_model(input_size=inputs.shape[0], data_loader=loader, epochs=epochs, batch_size=batch_size)
+        self.train_model(input_size=inputs.shape[0],
+                         data_loader=loader,
+                         epochs=epochs,
+                         batch_size=batch_size,
+                         val_X=val_X,
+                         val_y=val_y)
 
         return self
 
-    def train_model(self, input_size, data_loader, epochs, batch_size):
+    def train_model(self, input_size, data_loader, epochs, batch_size, val_X, val_y):
         num_of_steps = input_size // batch_size + (input_size % batch_size > 0)
         for epoch_num in range(epochs):
             if self.verbose:
                 sys.stdout.write("Epoch {0}/{1}:\n".format(epoch_num+1, epochs))
                 sys.stdout.flush()
 
-            self.train_epoch(num_of_steps, data_loader)
+            epoch_loss = self.train_epoch(num_of_steps, data_loader)
+
+            if self.verbose:
+                sys.stdout.write("avg loss: {0}".format(round(epoch_loss, 5)))
+
+                if val_X is not None and val_y is not None:
+                    val_loss = self.calc_validation_loss(val_X, val_y, batch_size)
+                    sys.stdout.write(" val loss: {0}".format(round(val_loss, 5)))
+
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+
+    def calc_validation_loss(self, val_X, val_y, batch_size):
+        inputs = torch.tensor(val_X, dtype=self.input_dtype)
+        tags = torch.tensor(val_y, dtype=torch.long if self.task_type == 'classification' else torch.float)
+
+        num_of_steps = inputs.shape[0] // batch_size + (inputs.shape[0] % batch_size > 0)
+
+        data = TensorDataset(inputs, tags)
+        loader = DataLoader(data, batch_size=batch_size)
+
+        val_loss = 0
+        self.model.eval()
+        for step_num, (input, tags) in enumerate(loader):
+            input, tags = input.to(self.device), tags.to(self.device)
+
+            with torch.no_grad():
+                output = self.model(input)
+
+                if self.task_type != 'classification':
+                    tags = tags.view(-1, self.output_dim)
+
+                batch_loss = self.loss_function(output, tags)
+                val_loss += batch_loss.item()
+
+
+        return val_loss / num_of_steps
+
 
     def train_epoch(self, num_of_steps, train_loader):
         self.model.train()
@@ -93,12 +135,10 @@ class TorchEstimator(object):
             self.optimizer.step()
 
             if self.verbose:
-                sys.stdout.write("\r" + "{0}/{1} batch loss: {2} ".format(step_num, num_of_steps, batch_loss.item()))
+                sys.stdout.write("\r" + "{0}/{1} batch loss: {2} ".format(step_num, num_of_steps, round(batch_loss.item(), 5)))
                 sys.stdout.flush()
 
-        if self.verbose:
-            sys.stdout.write("avg loss: {0}\n".format(epoch_loss / num_of_steps))
-            sys.stdout.flush()
+        return epoch_loss / num_of_steps
 
 
     def predict(self, X, batch_size=4):
