@@ -30,7 +30,7 @@ setup(
     license='Apache',
     packages=find_packages(exclude=['test*']),
     install_requires=[
-        'numpy==1.15.4',
+        'numpy==1.22.0',
         'scikit-learn==0.20.2',
         'torch==1.1.0',
         'pytorch-transformers',
